@@ -2,6 +2,7 @@
 
 export(brew_dyads)
 export(connect_phx_db)
+export(download_phx_db)
 export(expand_date)
 export(map_meta)
 export(tap_codebook)
