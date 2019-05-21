@@ -1,0 +1,53 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Convenience API for the Cline Center Historical Phoenix Event Data v.1.0.
+
+See the [Cline Center website](https://clinecenter.illinois.edu/project/machine-generated-event-data-projects/phoenix-data) for information on the Phoenix data curation and generation.
+
+## Installation 
+
+```{r,eval=F}
+devtools::install_github('edunford/phx')
+```
+
+## Getting Started 
+
+```{r}
+require(phx)
+```
+
+All `tap_` and `taste_` functions make a call to a currated sqlite database. This database needs to be installed locally. This will take a few minutes as the total data base is 969.6MB in size.
+```{r,eval=F}
+download_phx_db()
+```
+
+The codebook can be accessed at any time using
+```{r,eval=F}
+tap_codebook()
+```
+
+Once downloaded, there are two main function predicates: `taste_<events/meta>` to preview data in the database and `tap_<events/meta>` to extract the data from the database. `_events` provide the raw event entries, whereas `_meta` provides the metadata for each event entries. See code book for more details. 
+
+```{r}
+taste_events()
+```
+
+
+```{r}
+taste_meta()
+```
+
+[More getting started information to follow!]
+
+## Citations
+
+- **Data citation**: Althaus, Scott, Joseph Bajjalieh, John F. Carter, Buddy Peyton, and Dan  A. Shalmon. 2017. Cline Center Historical Phoenix Event Data. v.1.0.0. Distributed by Cline Center for Advanced Social Research. June 30. http://www.clinecenter.illinois.edu/data/event/phoenix/.
+
+- **Codebook citation**: Althaus, Scott, Joseph Bajjalieh, John F. Carter, Buddy Peyton, and Dan A. Shalmon. 2017. "Cline Center Historical Phoenix Event Data Variable Descriptions". Cline Center Historical Phoenix Event Data. v.1.0.0. Cline Center for Advanced Social Research. June 30. http://www.clinecenter.illinois.edu/data/event/phoenix/
+
