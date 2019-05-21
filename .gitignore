@@ -1,0 +1,5 @@
+.Rhistory
+.RData
+.Rproj.user
+data/phx_database.sqlite
+.DS_Store
