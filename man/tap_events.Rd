@@ -14,6 +14,9 @@ a vector using `c()`}
 \item{.database}{select database (FBIS, NYT, SWB); default is that all
 databases are selected from}
 }
+\value{
+tbl_df of requested cameo coded events.
+}
 \description{
 extract events from the Phoenix Event Dataset.
 }

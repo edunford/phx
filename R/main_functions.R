@@ -8,7 +8,7 @@
 #' @param .database select database (FBIS, NYT, SWB); default is that all
 #'   databases are selected from
 #'
-#' @return
+#' @return tbl_df of requested cameo coded events.
 #' @export
 #' @importFrom magrittr "%>%"
 #'
@@ -19,24 +19,20 @@
 tap_events = function(cameo_code = "all",.database="all"){
   if(.database == "all"){
     if( any(cameo_code %in% "all") ){
-      dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-        dplyr::tbl("events") %>% 
+      connect_phx_db('events')  %>% 
         dplyr::collect()
     } else{
-      dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-        tbl("events") %>% 
+      connect_phx_db('events') %>% 
         dplyr::filter(code %in% cameo_code) %>% 
         dplyr::collect()
     }
   }else{
     if( any(cameo_code %in% "all")) {
-      dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-        dplyr::tbl("events") %>% 
+      connect_phx_db('events') %>% 
         dplyr::filter(database == .database) %>% 
         dplyr::collect()
     } else{
-      dplyr::src_sqlite("data/phx_database.sqlite") %>%
-        dplyr::tbl("events") %>% 
+      connect_phx_db('events')  %>% 
         dplyr::filter(database == .database) %>% 
         dplyr::filter(code %in% cameo_code) %>% 
         dplyr::collect()
@@ -52,7 +48,7 @@ tap_events = function(cameo_code = "all",.database="all"){
 #' @param .database select database (FBIS, NYT, SWB); default is that all
 #'   databases are selected from
 #'
-#' @return
+#' @return a preview of the event data entries.
 #' @export
 #' @importFrom magrittr "%>%"
 #' 
@@ -61,10 +57,9 @@ tap_events = function(cameo_code = "all",.database="all"){
 #' taste_events(database="SWB")
 taste_events = function(.database="all"){
   if(.database %in% "all"){
-    dplyr::src_sqlite("data/phx_database.sqlite") %>% dplyr::tbl("events")  
+    connect_phx_db('events') 
   }else{
-    dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-      dplyr::tbl("events") %>% 
+    connect_phx_db('events')  %>% 
       dplyr::filter(database == .database)
   }
 }
@@ -88,7 +83,7 @@ tap_codebook = function(output_html=T){
   if(output_html){
     httr::BROWSE("https://uofi.app.box.com/s/bmh9i39m6bf0vhnuebtf3ak3j6uxy2le")  
   }else{
-    fs::file_show("data/codebook.pdf")
+    fs::file_show(system.file(package="phx","data/codebook.pdf"))
   }
 }
 
@@ -109,13 +104,16 @@ tap_codebook = function(output_html=T){
 #' translate_cameo(c("041","032","062"))
 #' 
 translate_cameo = function(.cameo_code="all"){
-  if(length(.cameo_code)>1 & any(.cameo_code=="all" )){
-    suppressMessages(readr::read_csv("data/cameo_translate.csv"))
+  if("all" %in% .cameo_code){
+    connect_phx_db('cameo_key') %>% dplyr::collect()
   }else{
-    suppressMessages(readr::read_csv("data/cameo_translate.csv")) %>% 
-      dplyr::filter(cameo_code %in% .cameo_code)
+    connect_phx_db('cameo_key') %>% 
+      dplyr::filter(cameo_code %in% .cameo_code) %>% 
+      dplyr::collect()
   }
 }
+
+
 
 
 
@@ -135,12 +133,11 @@ translate_cameo = function(.cameo_code="all"){
 #' 
 translate_actors = function(.actor_code=""){
   request = tibble::tibble(actor_code=.actor_code)
-  archive = suppressMessages(readr::read_csv("data/actor_translate.csv")) 
+  archive = connect_phx_db('actor_key') %>% dplyr::collect()
   dplyr::left_join(request,archive,by="actor_code") %>% 
     purrr::pluck("actor_name")
 }
 
-translate_actors()
 
 #' tap_meta
 #' 
@@ -159,12 +156,9 @@ translate_actors()
 #' 
 tap_meta = function(.database="all"){
   if(.database == "all"){
-    dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-      dplyr::tbl("titles") %>% 
-      dplyr::collect()
+    connect_phx_db('titles') %>% dplyr::collect()
   }else{
-    dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-      dplyr::tbl("titles") %>% 
+    connect_phx_db('titles') %>% 
       dplyr::filter(primary_source == .database) %>% 
       dplyr::collect()
   }
@@ -188,11 +182,9 @@ tap_meta = function(.database="all"){
 #' 
 taste_meta = function(.database="all"){
   if(.database=="all"){
-    dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-      dplyr::tbl("titles")  
+    connect_phx_db('titles') 
   }else{
-    dplyr::src_sqlite("data/phx_database.sqlite") %>% 
-      dplyr::tbl("titles") %>% 
+    connect_phx_db('titles') %>% 
       dplyr::filter(primary_source == .database)
   }
 }
@@ -375,13 +367,14 @@ expand_date = function(.data,date_variable,.aggregate_date="year",.fill=0){
 
 #' download_phx_db
 #'
-#' Download Phoenix Event Database. 
+#' Download Phoenix Event Database. Database must be downloaded for the
+#' subsequent functions to work.
 #'
 #' @return NULL; database installed on local drive.
 #' @export
 #'
 #' @examples
-#' 
+#'
 #' download_phx_db()
 #' 
 download_phx_db = function(){

@@ -10,7 +10,8 @@ download_phx_db()
 NULL; database installed on local drive.
 }
 \description{
-Download Phoenix Event Database.
+Download Phoenix Event Database. Database must be downloaded for the
+subsequent functions to work.
 }
 \examples{
 

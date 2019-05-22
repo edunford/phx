@@ -10,6 +10,9 @@ taste_events(.database = "all")
 \item{.database}{select database (FBIS, NYT, SWB); default is that all
 databases are selected from}
 }
+\value{
+a preview of the event data entries.
+}
 \description{
 Preview event entries from the Phoenix Event Dataset.
 }
