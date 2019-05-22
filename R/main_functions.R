@@ -379,5 +379,6 @@ expand_date = function(.data,date_variable,.aggregate_date="year",.fill=0){
 #' 
 download_phx_db = function(){
   download.file("https://www.dropbox.com/s/0djzdwyhuboxfft/phx_database.sqlite?raw=1",
-                destfile = "data/phx_database.sqlite")
+                destfile = system.file(package = "phx","data/"))
 }
+
