@@ -231,9 +231,11 @@ map_meta = function(.data){
 #' select(date,year)
 #' 
 connect_phx_db = function(.table="events"){
-  dplyr::src_sqlite("data/phx_database.sqlite") %>% 
+  dplyr::src_sqlite(system.file(package="phx",'data/phx_database.sqlite')) %>% 
     dplyr::tbl(.table)
 }
+
+
 
 
 #' brew_dyads
