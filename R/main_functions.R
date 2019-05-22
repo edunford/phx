@@ -231,7 +231,7 @@ map_meta = function(.data){
 #' select(date,year)
 #' 
 connect_phx_db = function(.table="events"){
-  dplyr::src_sqlite(system.file(package="phx",'data/phx_database.sqlite')) %>% 
+  dplyr::src_sqlite(system.file(package = "phx","data",'phx_database.sqlite')) %>% 
     dplyr::tbl(.table)
 }
 
@@ -381,6 +381,9 @@ expand_date = function(.data,date_variable,.aggregate_date="year",.fill=0){
 #' 
 download_phx_db = function(){
   download.file("https://www.dropbox.com/s/2jbfak1clfmqyy8/phx_database.sqlite?raw=1",
-                destfile = paste0(system.file(package = "phx","data/"),"phx_database.sqlite"))
+                destfile = file.path(system.file(package = "phx","data"),"phx_database.sqlite"))
 }
+
+
+
 
