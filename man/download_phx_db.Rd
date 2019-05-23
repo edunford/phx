@@ -4,7 +4,10 @@
 \alias{download_phx_db}
 \title{download_phx_db}
 \usage{
-download_phx_db()
+download_phx_db(manual_path = NULL)
+}
+\arguments{
+\item{manual_path}{{temporary} character string of file path of curated database. Default NULL.}
 }
 \value{
 NULL; database installed on local drive.
