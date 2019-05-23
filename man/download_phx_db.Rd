@@ -7,7 +7,8 @@
 download_phx_db(manual_path = NULL)
 }
 \arguments{
-\item{manual_path}{{temporary} character string of file path of curated database. Default NULL.}
+\item{manual_path}{{temporary} character string of file path of curated
+database to be uploaded into package infrastructure. Default NULL.}
 }
 \value{
 NULL; database installed on local drive.

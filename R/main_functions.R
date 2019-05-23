@@ -372,7 +372,8 @@ expand_date = function(.data,date_variable,.aggregate_date="year",.fill=0){
 #' Download Phoenix Event Database. Database must be downloaded for the
 #' subsequent functions to work.
 #'
-#' @param manual_path {temporary} character string of file path of curated database. Default NULL.
+#' @param manual_path {temporary} character string of file path of curated
+#'   database to be uploaded into package infrastructure. Default NULL.
 #'
 #' @return NULL; database installed on local drive.
 #' @export
@@ -384,10 +385,10 @@ expand_date = function(.data,date_variable,.aggregate_date="year",.fill=0){
 download_phx_db = function(manual_path=NULL){
   if(is.null(manual_path)){
     # Download file from DB Link
-    download.file("https://www.dropbox.com/s/2jbfak1clfmqyy8/phx_database.sqlite?raw=1",
+    download.file("https://www.dropbox.com/s/gdponvy02kaeear/phx_database.sqlite?raw=1",
                   destfile = file.path(system.file(package = "phx","data"),"phx_database.sqlite"))  
   } else{
-    fs::file_move(path = manual_path,new_path = file.path(system.file(package = "phx","data"),"phx_database.sqlite"))
+    fs::file_copy(path = manual_path,new_path = file.path(system.file(package = "phx","data"),"phx_database.sqlite"))
   }
   
 }
